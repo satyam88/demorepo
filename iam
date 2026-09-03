@@ -1,5 +1,7 @@
 AWS IAM & AWS Organizations
+
 1. IAM Users
+=============
 Types of Users
 Root User
 Admin User
@@ -14,8 +16,9 @@ Power User: A power user can manage most AWS services but normally cannot manage
 
 Normal User: A user with limited permissions based on the IAM policies assigned to them.
 
-2. IAM Groups
 
+2. IAM Groups
+=============
 IAM Group: A collection of IAM users used to manage permissions for multiple users.
 
 Developers Group
@@ -26,8 +29,11 @@ Important Operations
 Create IAM Group
 Add users to IAM Group
 Attach policies to IAM Group
-3. IAM Policy Document
 
+
+
+3. IAM Policy Document
+=============
 An IAM Policy Document is a JSON document that defines permissions for AWS resources.
 
 Example:
@@ -52,7 +58,10 @@ Effect     → What decision?
 Action     → What operation?
 Resource   → On which resource?
 Condition  → Under what condition?
+
+
 4. Types of IAM Policies
+=============
 1. AWS Managed Policy
 Created and managed by AWS.
 Provides commonly required permissions.
@@ -64,6 +73,7 @@ Examples:
 AdministratorAccess
 AmazonS3ReadOnlyAccess
 AmazonEC2FullAccess
+
 2. Customer Managed Policy
 Created and managed by the customer.
 We define the required permissions.
@@ -95,7 +105,9 @@ Customer Managed Policy
 
 Inline Policy
 → Embedded directly into one IAM identity
+
 5. IAM Authentication & Access
+=============
 MFA for Root User
 
 MFA provides an additional layer of security for the root account.
@@ -129,6 +141,7 @@ AWS CLI / API
 Never share or expose the Secret Access Key.
 
 6. IAM User Access
+=============
 AWS GUI Access
 
 An IAM user can access the AWS Management Console using:
@@ -156,10 +169,11 @@ Output format
 Verify:
 
 aws sts get-caller-identity
+
 7. AWS CLI Setup on Windows
+=============
 Install AWS CLI
 
-Install AWS CLI on Windows.
 
 Verify:
 
@@ -175,24 +189,32 @@ Default region: ap-south-1
 Output format: json
 Verify Configuration
 aws sts get-caller-identity
+
+
 8. Create AWS Resources Using CLI
+=============
 Create IAM User
 aws iam create-user --user-name dev-user
+
 Create IAM Group
 aws iam create-group --group-name Developers
+
 Add User to Group
 aws iam add-user-to-group \
   --group-name Developers \
   --user-name dev-user
+
 Create IAM Role
 aws iam create-role \
   --role-name EC2-S3-Role \
   --assume-role-policy-document file://trust-policy.json
+
 Create S3 Bucket
 aws s3api create-bucket \
   --bucket my-demo-bucket-12345 \
   --region ap-south-1 \
   --create-bucket-configuration LocationConstraint=ap-south-1
+
 Create EC2 Instance
 aws ec2 run-instances \
   --region ap-south-1 \
@@ -201,6 +223,7 @@ aws ec2 run-instances \
   --key-name my-key \
   --security-group-ids sg-xxxxxxxx \
   --subnet-id subnet-xxxxxxxx
+
 9. IAM Role for EC2
 How does an application running on EC2 access S3 without access keys?
 
