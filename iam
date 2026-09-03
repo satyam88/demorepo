@@ -26,9 +26,28 @@
 
 ## 4. Types of IAM Policies
 
-- AWS Managed Policy
-- Customer Managed Policy
-- Inline Policy
+1. AWS Managed Policy
+========================
+Created and managed by AWS.
+Common permissions provided by AWS.
+You can attach them to users, groups, or roles.
+You cannot edit the policy permissions.
+
+Example: AdministratorAccess, AmazonS3ReadOnlyAccess
+
+2. Customer Managed Policy
+========================
+Created and managed by you/customer.
+You define the required permissions.
+Can be edited, versioned, and reused across multiple users, groups, or roles.
+
+Example: A policy allowing only s3:GetObject on a specific bucket.
+
+3. Inline Policy
+========================
+Created and embedded directly inside one user, group, or role.
+Has a one-to-one relationship with that identity.
+Cannot be reused by another identity.
 
 ## 5. IAM Authentication & Access
 
