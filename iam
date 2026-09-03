@@ -1,84 +1,313 @@
-# AWS IAM & AWS Organizations
+AWS IAM & AWS Organizations
+1. IAM Users
+Types of Users
+Root User
+Admin User
+Power User
+Normal User
 
-## 1. IAM Users
+Root User: The root user is the AWS account owner and has full access to all AWS resources.
 
-- Types of Users:
-  - Root User
-  - Admin User
-  - Power User
-  - Normal User
+Admin User: An admin user generally has AdministratorAccess and can manage AWS resources and IAM.
 
-## 2. IAM Groups
+Power User: A power user can manage most AWS services but normally cannot manage IAM users, groups, or policies.
 
-- What is an IAM Group?
-- Create and manage IAM Groups
-- Add users to IAM Groups
-- Attach policies to IAM Groups
+Normal User: A user with limited permissions based on the IAM policies assigned to them.
 
-## 3. IAM Policy Documents
+2. IAM Groups
 
-- What is an IAM Policy Document?
-- Elements of a Policy Document:
-  - Effect
-  - Action
-  - Resource
-  - Condition (Optional)
+IAM Group: A collection of IAM users used to manage permissions for multiple users.
 
-## 4. Types of IAM Policies
+Developers Group
+├── User A
+├── User B
+└── User C
+Important Operations
+Create IAM Group
+Add users to IAM Group
+Attach policies to IAM Group
+3. IAM Policy Document
 
+An IAM Policy Document is a JSON document that defines permissions for AWS resources.
+
+Example:
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::my-bucket/*"
+    }
+  ]
+}
+Elements of a Policy Document
+Effect → Allow or Deny
+Action → What operation is allowed or denied
+Resource → Which AWS resource
+Condition (Optional) → Under what condition
+Easy Way to Remember
+Effect     → What decision?
+Action     → What operation?
+Resource   → On which resource?
+Condition  → Under what condition?
+4. Types of IAM Policies
 1. AWS Managed Policy
-========================
 Created and managed by AWS.
-Common permissions provided by AWS.
-You can attach them to users, groups, or roles.
-You cannot edit the policy permissions.
+Provides commonly required permissions.
+Can be attached to users, groups, or roles.
+AWS manages updates to the policy.
 
-Example: AdministratorAccess, AmazonS3ReadOnlyAccess
+Examples:
 
+AdministratorAccess
+AmazonS3ReadOnlyAccess
+AmazonEC2FullAccess
 2. Customer Managed Policy
-========================
-Created and managed by you/customer.
-You define the required permissions.
-Can be edited, versioned, and reused across multiple users, groups, or roles.
+Created and managed by the customer.
+We define the required permissions.
+Can be edited and versioned.
+Can be reused across multiple users, groups, or roles.
 
-Example: A policy allowing only s3:GetObject on a specific bucket.
+Example:
 
+A policy allowing only s3:GetObject on a specific S3 bucket.
+
+{
+  "Effect": "Allow",
+  "Action": "s3:GetObject",
+  "Resource": "arn:aws:s3:::my-bucket/*"
+}
 3. Inline Policy
-========================
-Created and embedded directly inside one user, group, or role.
+Created and embedded directly into one user, group, or role.
 Has a one-to-one relationship with that identity.
 Cannot be reused by another identity.
+IAM Role
+└── Inline Policy
+    └── S3 Access
+Easy Interview Answer
+AWS Managed Policy
+→ Managed by AWS
 
-## 5. IAM Authentication & Access
+Customer Managed Policy
+→ Created and managed by us
 
-- MFA for Root User
-- MFA for IAM Users
-- Access Key ID
-- Secret Access Key
-- How does an IAM User access the AWS GUI?
-- How does an IAM User access AWS using CLI?
+Inline Policy
+→ Embedded directly into one IAM identity
+5. IAM Authentication & Access
+MFA for Root User
 
-## 6. AWS CLI Setup on Windows
+MFA provides an additional layer of security for the root account.
 
-- Install AWS CLI on Windows
-- Configure Access Key ID and Secret Access Key on Windows
-- Verify AWS CLI configuration
+Password
+   +
+MFA Code
+   ↓
+AWS Account
 
-## 7. Create AWS Resources Using CLI
+MFA should be enabled for the root user.
 
-- Create IAM User
-- Create IAM Group
-- Create IAM Role
-- Create EC2 Instance
-- Create S3 Bucket
+MFA for IAM Users
 
-## 8. IAM Role for EC2
+IAM users can also use MFA for additional security when accessing AWS.
 
-- How does an application running on EC2 access S3 without using access keys?
+Access Key ID
 
-## 9. AWS Organizations
+Access Key ID is used to identify the AWS access credentials.
 
-- What is AWS Organizations?
-- What is the Root Account?
-- What is an Organizational Unit (OU)?
-- What is an SCP (Service Control Policy)?
+Secret Access Key
+
+Secret Access Key is used with the Access Key ID to authenticate AWS CLI/API requests.
+
+Access Key ID
+      +
+Secret Access Key
+      ↓
+AWS CLI / API
+
+Never share or expose the Secret Access Key.
+
+6. IAM User Access
+AWS GUI Access
+
+An IAM user can access the AWS Management Console using:
+
+AWS Account ID / Account Alias
+        +
+IAM Username
+        +
+Password
+        +
+MFA (if enabled)
+AWS CLI Access
+
+Configure the AWS CLI using:
+
+aws configure
+
+Provide:
+
+AWS Access Key ID
+AWS Secret Access Key
+Default region
+Output format
+
+Verify:
+
+aws sts get-caller-identity
+7. AWS CLI Setup on Windows
+Install AWS CLI
+
+Install AWS CLI on Windows.
+
+Verify:
+
+aws --version
+Configure Access Key and Secret Access Key
+aws configure
+
+Example:
+
+AWS Access Key ID: AKIAxxxxxxxx
+AWS Secret Access Key: xxxxxxxxx
+Default region: ap-south-1
+Output format: json
+Verify Configuration
+aws sts get-caller-identity
+8. Create AWS Resources Using CLI
+Create IAM User
+aws iam create-user --user-name dev-user
+Create IAM Group
+aws iam create-group --group-name Developers
+Add User to Group
+aws iam add-user-to-group \
+  --group-name Developers \
+  --user-name dev-user
+Create IAM Role
+aws iam create-role \
+  --role-name EC2-S3-Role \
+  --assume-role-policy-document file://trust-policy.json
+Create S3 Bucket
+aws s3api create-bucket \
+  --bucket my-demo-bucket-12345 \
+  --region ap-south-1 \
+  --create-bucket-configuration LocationConstraint=ap-south-1
+Create EC2 Instance
+aws ec2 run-instances \
+  --region ap-south-1 \
+  --image-id ami-xxxxxxxx \
+  --instance-type t3.micro \
+  --key-name my-key \
+  --security-group-ids sg-xxxxxxxx \
+  --subnet-id subnet-xxxxxxxx
+9. IAM Role for EC2
+How does an application running on EC2 access S3 without access keys?
+
+Use an IAM Role attached to the EC2 instance.
+
+EC2
+ ↓
+IAM Role
+ ↓
+S3 Permissions
+ ↓
+S3
+
+The application obtains temporary credentials through the EC2 Instance Metadata Service.
+
+Interview Answer
+
+Attach an IAM role to the EC2 instance with the required S3 permissions. The application can obtain temporary credentials from the instance metadata service instead of storing long-lived access keys.
+
+10. AWS Organizations
+What is AWS Organizations?
+
+AWS Organizations allows you to centrally manage multiple AWS accounts.
+
+AWS Organization
+│
+├── Management Account
+├── Production Account
+├── Development Account
+└── Security Account
+Benefits
+Centralized account management
+Organizational Units
+Service Control Policies
+Consolidated Billing
+Centralized Governance
+11. What is the Root Account?
+
+The Root in AWS Organizations is the top-level container for all AWS accounts and OUs in the organization.
+
+Organization Root
+│
+├── Production OU
+│   ├── Account
+│   └── Account
+│
+└── Development OU
+    └── Account
+
+Note: Do not confuse the Organizations Root with the AWS Account Root User.
+
+12. What is an OU?
+
+OU = Organizational Unit
+
+An OU is a logical container used to organize AWS accounts.
+
+Organization
+│
+├── Production OU
+│   ├── Prod Account
+│   └── Prod Account
+│
+├── Development OU
+│   ├── Dev Account
+│   └── Dev Account
+│
+└── Security OU
+    └── Security Account
+
+OUs are commonly used to apply governance policies to multiple AWS accounts.
+
+13. What is SCP?
+
+SCP = Service Control Policy
+
+An SCP is an AWS Organizations policy that defines the maximum available permissions for AWS accounts in an organization or OU.
+
+Example
+
+If an account has:
+
+AdministratorAccess
+
+But the SCP denies:
+
+ec2:TerminateInstances
+
+The user cannot terminate EC2 instances.
+
+IAM Policy
+    +
+SCP
+    ↓
+Effective Permissions
+Important Point
+
+SCP does not grant permissions. It sets the maximum permissions that an account can use.
+
+Example
+Organization
+│
+└── Production OU
+    │
+    └── Production Account
+        │
+        ├── IAM Policies
+        └── SCP
+
+If the SCP denies an action, an IAM policy cannot override that denial.
