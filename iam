@@ -1,0 +1,65 @@
+# AWS IAM & AWS Organizations
+
+## 1. IAM Users
+
+- Types of Users:
+  - Root User
+  - Admin User
+  - Power User
+  - Normal User
+
+## 2. IAM Groups
+
+- What is an IAM Group?
+- Create and manage IAM Groups
+- Add users to IAM Groups
+- Attach policies to IAM Groups
+
+## 3. IAM Policy Documents
+
+- What is an IAM Policy Document?
+- Elements of a Policy Document:
+  - Effect
+  - Action
+  - Resource
+  - Condition (Optional)
+
+## 4. Types of IAM Policies
+
+- AWS Managed Policy
+- Customer Managed Policy
+- Inline Policy
+
+## 5. IAM Authentication & Access
+
+- MFA for Root User
+- MFA for IAM Users
+- Access Key ID
+- Secret Access Key
+- How does an IAM User access the AWS GUI?
+- How does an IAM User access AWS using CLI?
+
+## 6. AWS CLI Setup on Windows
+
+- Install AWS CLI on Windows
+- Configure Access Key ID and Secret Access Key on Windows
+- Verify AWS CLI configuration
+
+## 7. Create AWS Resources Using CLI
+
+- Create IAM User
+- Create IAM Group
+- Create IAM Role
+- Create EC2 Instance
+- Create S3 Bucket
+
+## 8. IAM Role for EC2
+
+- How does an application running on EC2 access S3 without using access keys?
+
+## 9. AWS Organizations
+
+- What is AWS Organizations?
+- What is the Root Account?
+- What is an Organizational Unit (OU)?
+- What is an SCP (Service Control Policy)?
